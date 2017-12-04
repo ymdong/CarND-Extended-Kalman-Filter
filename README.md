@@ -1,4 +1,4 @@
-# Extended Kalman Filter Project Starter Code
+# Extended Kalman Filter Project
 Self-Driving Car Engineer Nanodegree Program
 
 In this project, a kalman filter is constructed using C++ to estimate the state of a moving object based on the senor fusion of noisy lidar and radar measurements. For lidar data, the standard kalman filter is used, but for radar data, an extended kalman filter is used due to the nonlinearity of measurement function.

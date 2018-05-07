@@ -1,6 +1,6 @@
 #include "kalman_filter.h"
 #include "tools.h"
-
+#include <math.h>
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
@@ -23,7 +23,6 @@ void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
 
 void KalmanFilter::Predict() {
   /**
-  TODO:
     * predict the state
   */
   x_ = F_ * x_;
@@ -31,9 +30,13 @@ void KalmanFilter::Predict() {
   P_ = F_ * P_ * Ft + Q_;
 }
 
+void KalmanFilter::NormalizeAngle(double &phi)
+{
+  phi = atan2(sin(phi), cos(phi));
+}
+
 void KalmanFilter::Update(const VectorXd &z) {
   /**
-  TODO:
     * update the state by using Kalman Filter equations
   */
   VectorXd z_pred = H_ * x_;
@@ -53,18 +56,18 @@ void KalmanFilter::Update(const VectorXd &z) {
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
   /**
-  TODO:
     * update the state by using Extended Kalman Filter equations
   */
   VectorXd z_pred = tools.z_EKF(x_);
   VectorXd y = z - z_pred;
-  const double PI  =3.141592653589793238463;
-  if (y(1) < -PI){
-    y(1) += 2*PI;
-  }
-  else if (y(1) > PI){
-    y(1) -= 2*PI;
-  }
+  //const double PI  =3.141592653589793238463;
+  // if (y(1) < -M_PI){
+  //   y(1) += 2 * M_PI;
+  // }
+  // else if (y(1) > M_PI){
+  //   y(1) -= 2 * M_PI;
+  // }
+  NormalizeAngle(y(1));
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;
   MatrixXd Si = S.inverse();
